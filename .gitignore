@@ -11,6 +11,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+dist2/
 downloads/
 eggs/
 .eggs/
@@ -25,6 +26,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+innosetup-6.2.1.exe
+nsis-3.08-setup.exe
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
