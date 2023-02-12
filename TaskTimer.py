@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import datetime
 import ctypes
 import time
@@ -26,6 +26,7 @@ class TaskTimer:
         self.app_Icon = resource_path("favicon.ico")
         self.app_Wavefile = resource_path("complete.wav")
         self.master = master
+        self.master.protocol("WM_DELETE_WINDOW", self.close_app)
         self.master.title(self.app_Name)
         self.master.geometry("350x100")
         self.master.resizable(False, False)
@@ -112,21 +113,31 @@ class TaskTimer:
             remaining_time = target_time - current_time
             formate_remaintime = self.format_remaining_time(remaining_time)
             percentage = int((remaining_time / total_time) * 100)
-            # let try to check if percentage is half of the time
-            if percentage in self.reminders:
-                beeptime = 2200 + percentage
-                winsound.Beep(beeptime, 1000)
-                self.pop_notify("Warning", f"Time's is running out you're at {percentage}%!")
+            try:
+                # let try to check if percentage is half of the time
+                if percentage in self.reminders:
+                    beeptime = 2200 + percentage
+                    winsound.Beep(beeptime, 1000)
+                                        
+                    thread = threading.Thread(target=self.pop_notify, args=("Warning", f"Time's is running out you're at {percentage}%!",), name="Timer Notisfier")
+                    thread.start()
+            except:
+                pass
+            
                 
             if remaining_time.total_seconds() <= 0:
                 self.running = False
-                self.log_label.config(text="Time is up!")
-                winsound.Beep(2500, 2000)
-                self.play_sound()
-                self.reset_Timer()
-                self.pop_notify("Completed", f"Time's up!")
-                break
-            
+                try:
+                    self.log_label.config(text="Time is up!")
+                    winsound.Beep(2500, 2000)
+                    self.play_sound()
+                    time.sleep(2)
+                    self.reset_Timer()
+                    self.pop_notify("Completed", f"Time's up!")
+                    break
+                except:
+                    pass
+                
             else:
                 self.log_label.config(text=str(formate_remaintime))
                 time.sleep(1)
@@ -142,6 +153,46 @@ class TaskTimer:
         self.time_second.config(state="normal")
         self.log_label.config(text="00:00:00")
         self.start_button.config(text="Start", command=self.start, background="green")
+        
+    def close_app(self):
+        # messagebox.showwarning("Warning", "Are you sure you want to exit the application?")
+        # if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        #     self.master.destroy()
+        #     messagebox.destroy()
+        self.close_all_popups()
+        self.master.destroy()
+        
+        
+    import ctypes
+
+    def close_all_popups(self):
+        try:
+            # Enumerate all open windows
+            EnumWindows = ctypes.windll.user32.EnumWindows
+            EnumWindowsProc = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int))
+            GetWindowText = ctypes.windll.user32.GetWindowTextW
+            GetWindowTextLength = ctypes.windll.user32.GetWindowTextLengthW
+            IsWindowVisible = ctypes.windll.user32.IsWindowVisible
+
+            titles = []
+            def foreach_window(hwnd, lParam):
+                if IsWindowVisible(hwnd):
+                    length = GetWindowTextLength(hwnd)
+                    buff = ctypes.create_unicode_buffer(length + 1)
+                    GetWindowText(hwnd, buff, length + 1)
+                    titles.append(buff.value)
+                return True
+
+            EnumWindows(EnumWindowsProc(foreach_window), 0)
+
+            for title in titles:
+                if "MessageBox" in title:
+                    hwnd = ctypes.windll.user32.FindWindowW(None, title)
+                    ctypes.windll.user32.PostMessageW(hwnd, 0x0010, 0, 0)
+                    
+        except Exception as e:
+            print("An error occurred:", e)
+
         
 
 if __name__ == "__main__":
