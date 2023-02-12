@@ -105,6 +105,7 @@ class TaskTimer:
     
     def start_timer(self, target_time):
         self.running = True
+        self.remaining_popalert = False
         start_time = datetime.datetime.now()
         total_time = target_time - start_time
         
@@ -116,11 +117,17 @@ class TaskTimer:
             try:
                 # let try to check if percentage is half of the time
                 if percentage in self.reminders:
-                    beeptime = 2200 + percentage
-                    winsound.Beep(beeptime, 1000)
-                                        
-                    thread = threading.Thread(target=self.pop_notify, args=("Warning", f"Time's is running out you're at {percentage}%!",), name="Timer Notisfier")
-                    thread.start()
+                    if not self.remaining_popalert:
+                        beeptime = 2200 + percentage
+                        winsound.Beep(beeptime, 1000)
+                                            
+                        thread = threading.Thread(target=self.pop_notify, args=("Warning", f"Time's is running out you're at {percentage}%!",), name="Timer Notisfier")
+                        thread.start()
+                        self.remaining_popalert = True
+                    
+                else:
+                    self.remaining_popalert =  False
+                    
             except:
                 pass
             
