@@ -14,23 +14,22 @@ def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS 
     except Exception:
+        # point to a folder on my local
         base_path = os.path.abspath(".") + '\\src'
         
     return os.path.join(base_path, relative_path)
 
 
-App_Name = "Task Timer"
-App_Icon = resource_path("favicon.ico")
-App_Wavefile = resource_path("complete.wav")
-
-
 class TaskTimer:    
     def __init__(self, master):
+        self.app_Name = "Task Timer"
+        self.app_Icon = resource_path("favicon.ico")
+        self.app_Wavefile = resource_path("complete.wav")
         self.master = master
-        self.master.title(App_Name)
+        self.master.title(self.app_Name)
         self.master.geometry("350x100")
         self.master.resizable(False, False)
-        self.master.iconbitmap(App_Icon)
+        self.master.iconbitmap(self.app_Icon)
         self.running = False
         hours =  ['00'] + [str(x) for x in range(1, 25)]
         minutes = ['00'] + [str(x) for x in range(1, 61)]
@@ -57,18 +56,21 @@ class TaskTimer:
         self.log_label = tk.Label(self.master, text="00:00:00", font=("TkDefaultFont", 20))
         self.log_label.grid(row=1, column=1, columnspan=4, padx=10, pady=10)
         
+        # To force a GUI window to stay on top of other windows, you can use the attributes() method of the Tkinter Toplevel widget. The attributes() method is used to set various attributes of a window.
+        self.master.attributes("-topmost", True)
+        
     def pop_notify(self, title, msg):
         # notification.notify(
         #             title= title,
         #             message= msg,
-        #             app_name= App_Name,
-        #             app_icon= App_Icon,
+        #             app_name= self.app_Name,
+        #             app_icon= self.app_Icon,
         #             timeout=5
         #         )
         ctypes.windll.user32.MessageBoxW(None, msg, title, 0x40 | 0x1)
         
     def play_sound(self):
-        ctypes.windll.winmm.mciSendStringW(f'play "{App_Wavefile}"', None, 0, None)
+        ctypes.windll.winmm.mciSendStringW(f'play "{self.app_Wavefile}"', None, 0, None)
         
     def format_remaining_time(self, remaining_time):
         minutes, seconds = divmod(int(remaining_time.total_seconds()), 60)

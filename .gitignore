@@ -28,6 +28,8 @@ share/python-wheels/
 MANIFEST
 innosetup-6.2.1.exe
 nsis-3.08-setup.exe
+setup.iss
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

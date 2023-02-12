@@ -13,7 +13,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{D13B7A99-BAB0-488D-9B98-E8DF93A9E80A}
+AppId={{C1EDED11-7141-4F75-973A-FC033CF00B9B}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -28,8 +28,8 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=C:\DevProject\Python\Task-Timer\finish
-OutputBaseFilename=TastTimer
-SetupIconFile=C:\DevProject\Python\Task-Timer\dist2\TaskTimer\favicon.ico
+OutputBaseFilename=TaskTimer
+SetupIconFile=C:\DevProject\Python\Task-Timer\src\favicon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
