@@ -13,9 +13,6 @@ dintaller = "ios.key"
 
 # Save the encrypted key to a file
 env_folder = os.path.join(app_current_folder, 'projectenv')
-plyer_dest = 'projectenv/Lib/site-packages/plyer/platforms/' #incase you want to use desktop notification add the 
-# plyer_dest = f",{plyer_dest}" #DISABLE IS NOT NEEEDED
-# print(plyer_dest)
 
 hkey = os.path.join(app_current_folder,  dkey)
 f = Ecyper(keyname=hkey)
